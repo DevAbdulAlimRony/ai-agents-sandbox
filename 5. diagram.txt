@@ -1,0 +1,2 @@
+## Diagram GPT: Create Database Diagram from promt.
+## database.build

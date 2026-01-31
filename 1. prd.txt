@@ -1,0 +1,4 @@
+# Product Requirement Document:
+1. Make part by part requirement using claude.
+2. Add requirement in notion
+3. Use Jira for project management maybe or notion.

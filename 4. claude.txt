@@ -1,0 +1,223 @@
+It can help with anything you can do from the command line: writing docs, running builds, searching files, researching topics, and more.
+## Can use cloude, desktop application, mobile application.
+## Can make AI agent using aircrafts and publish for public and search engine to be used by anyone.
+## Can use Extension in vs code, in github action, chrome extension.
+
+# By CLI:
+Install: windows powershell- irm https://claude.ai/install.ps1 | iex
+cmd: curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+cd project-path
+claude
+/login
+write the promt
+Use git with Claude Code: what files have I changed?
+create a new branch called feature/quickstart
+show me the last 5 commits
+help me resolve merge conflicts
+
+## Commands:
+Run a one time task: claude "task.."
+Run one-off query, then exit: claude -p "query"
+Continue most recent conversation in current directory: claude -c
+Resume a previous conversation: claude -r
+Create a Git commit: claude commit
+Clear conversation history: /Clear
+Show available commands: /help
+exit or ctrl + c
+
+## Promts:
+- Be specific
+- Break complex task into steps like 1, 2.
+- Let claude explore first (analyze the database schema)
+
+## Shortcuts:
+Press ? to see all available keyboard shortcuts
+Use Tab for command completion
+Press ↑ for command history
+Type / to see all commands and skills
+@ to add file.
+
+### Extend Claude:
+- CLAUDE.md adds persistent context Claude sees every session
+- Skills add reusable knowledge and invocable workflows
+- MCP connects Claude to external services and tools
+- Subagents run their own loops in isolated context, returning summaries
+- Hooks run outside the loop entirely as deterministic scripts
+- Plugins and marketplaces package and distribute these features
+###
+But, too much can fill up your context window, but it can also add noise that makes Claude less effective; skills may not trigger correctly, or Claude may lose track of your conventions.
+Claude.md will run for every request, so be sure with that.
+MCP Servers will run for every session.
+Skills will run when used
+Hooks will run when trigger.
+
+## Eample Workflows:
+1. Understanding a new project:
+   Give me an overview of this codebase
+   Explain the main architecture patterns used here
+   Explain the main architecture patterns used here
+   Find the files that handle user authentication.
+2. Fix Bugs:
+   > I'm seeing an error when I run npm test
+   > suggest a few ways to fix the @ts-ignore in user.ts
+3. Refactor Code:
+   > find deprecated API usage in our codebase
+   > suggest how to refactor utils.js to use modern JavaScript features
+   > refactor utils.js to use ES2024 features while maintaining the same behavior
+   > run tests for the refactored code.
+4. Use sub agent:
+   > /agents
+   > review my recent code changes for security issues
+   > run all tests and fix any failures
+   > use the code-reviewer subagent to check the auth module
+4. Plan:
+   claude --permission-mode plan -p "Analyze the authentication system and suggest improvements"
+5. Tests:
+   > find functions in NotificationsService.swift that are not covered by tests
+   > add tests for the notification service
+   > add test cases for edge conditions in the notification service
+   > summarize the changes I've made to the authentication module
+6. Documentation
+7. Work with Images: add an image
+   > What does this image show?
+   > Describe the UI elements in this screenshot
+   > Are there any problematic elements in this diagram?
+   > This is our current database schema. How should we modify it for the new feature?
+   > Generate CSS to match this design mockup
+7. Reference:
+   > Explain the logic in @src/utils/auth.js
+8. MCP Reference:
+   > Show me the data from @github:repos/owner/repo/issues
+9. Ask claude about its capabilities
+10. Database Querying: How many broiler farmers have ended flocks?
+Do I have any user who follow up a farmer today?
+We can test like that on local or live database to fix any issue mismatched.
+Claude will write query behind the scene.
+11. Run all pages in build mode , in dev mode, and give all console error, network error etc.
+12. A new error occurred. Read the log file, tell me the problem and fix the error.
+
+## Name your session: > /rename auth-refactor. Best practice to find it later.
+## Runparallel session with git worktrees: git worktree add ../project-feature-a -b feature-a
+
+## When we use so much global context in md file like laravel boost, it will be sometimes cofusing. So, make when needs.
+
+## If we work in the same chat continually, the all previous promts result will be the context for the current promt, so
+- It will be more time consuming, costly and confusing for AI. so, for every new unrelated task, use new chat in cursor or in extension.
+
+## Best Practices:
+- Give claude a way to verify its work like open the form add a data and test if everything works perfectly no console errror.
+- UI changes can be verified using the Claude in Chrome extension. It opens a browser, tests the UI, and iterates until the code works.
+- Enter Plan Mode. Claude reads files and answers questions without making changes, Ask Claude to create a detailed implementation plan., Ask Claude to commit with a descriptive message and create a PR, Then implement based on plan.
+- Provide specific context in your prompts: Scope the task, point to sources, reference existing patterns, describe the symptomp.
+- Reference file with @, paste image directly, give URLs.
+- Write an effective CLAUDE.md. Include:
+  - Bash commands Claude can’t guess
+  - Code style rules that differ from defaults
+  - Testing instructions and preferred test runners
+  - Repository etiquette (branch naming, PR conventions)
+  - Architectural decisions specific to your project
+  - Developer environment quirks (required env vars)
+  - Common gotchas or non-obvious behaviors
+- claude md can take imported md:
+  # Additional Instructions
+  - Git workflow: @docs/git-instructions.md
+  - Personal overrides: @~/.claude/my-project-instructions.md
+- We can take Claude.md file in root folder with gitignore, or ./claude/CLAUDE.md, project directories, child directories.
+- Run /hooks for interactive configuration, or edit .claude/settings.json directly.
+- Create SKILL.md files in .claude/skills/ to give Claude domain knowledge and reusable workflows.
+  ---
+  name: api-conventions
+  description: REST API design conventions for our services
+  ---
+  # API Conventions
+  - Use kebab-case for URL paths
+  - Use camelCase for JSON properties
+  - Always include pagination for list endpoints
+  - Version APIs in the URL path (/v1/, /v2/)
+  -
+  ---
+  name: fix-issue
+  description: Fix a GitHub issue
+  disable-model-invocation: true
+  ---
+  Analyze and fix the GitHub issue: $ARGUMENTS.
+
+  1. Use `gh issue view` to get the issue details
+  2. Understand the problem described in the issue
+  3. Search the codebase for relevant files
+  4. Implement the necessary changes to fix the issue
+  5. Write and run tests to verify the fix
+  6. Ensure code passes linting and type checking
+  7. Create a descriptive commit message
+  8. Push and create a PR
+- Subagents run in their own context with their own set of allowed tools. They’re useful for tasks that read many files or need specialized focus without cluttering your main conversation.
+  ---
+  name: security-reviewer
+  description: Reviews code for security vulnerabilities
+  tools: Read, Grep, Glob, Bash
+  model: opus
+  ---
+  You are a senior security engineer. Review code for:
+  - Injection vulnerabilities (SQL, XSS, command injection)
+  - Authentication and authorization flaws
+  - Secrets or credentials in code
+  - Insecure data handling
+  Provide specific line references and suggested fixes.
+- Tell Claude to use subagents explicitly: “Use a subagent to review this code for security issues.”
+- Ask Claude to Know: What edge cases does CustomerOnboardingFlowImpl handle?
+- Esc:  Stop Claude mid-action with the Esc key.
+- Esc + Esc or /rewind: Open the rewind menu and restore previous conversation and code state.
+- /clear: Reset context between unrelated tasks.
+- "Undo that": Have Claude revert its changes.
+- During long sessions, Claude’s context window can fill with irrelevant conversation, file contents, and commands. Use clear, or new chat.
+- Run multiple sessions: Claude Desktop, Claude Code on the web.
+
+- Claude is good for backend changes, gemini is good for frontend etcs. Toggle model for tasks.
+
+## Web:
+- Visit claude.ai/code
+- Connect your GitHub account
+- Install the Claude GitHub app in your repositories
+- Select your default environment
+- Submit your coding task
+- Review changes in diff view, iterate with comments, then create a pull request
+## Claude Desktop:
+Install, Sign In, Click the Code tab.
+## Extension: Connect Claude Code to your browser to test web apps, debug with console logs, and automate browser tasks.
+Install Extension
+Update Claude Code: claude update
+Start Claude Code with Chrome enabled: claude --chrome
+Promt: Go to code.claude.com/docs, click on the search box,
+type "hooks", and tell me what results appear.
+- I just updated the login form validation. Can you open localhost:3000,
+  try submitting the form with invalid data, and check if the error
+  messages appear correctly?
+- Open the dashboard page and check the console for any errors when
+  the page loads.
+- I have a spreadsheet of customer contacts in contacts.csv. For each row,
+  go to our CRM at crm.example.com, click "Add Contact", and fill in the
+  name, email, and phone fields.
+- Draft a project update based on our recent commits and add it to my
+  Google Doc at docs.google.com/document/d/abc123
+- Go to the product listings page and extract the name, price, and
+  availability for each item. Save the results as a CSV file.
+- Check my calendar for meetings tomorrow, then for each meeting with
+  an external attendee, look up their company on LinkedIn and add a
+  note about what they do.
+
+## Visual Stidio:
+Install for vs code, install for cursor.
+Shortcuts:
+Open in new Tab: ctl+shift+Esc
+New Conversation: ctrl+N
+Insert Reference: alt+k
+Focus Input: ctrl+Esc
+Configure Settings: .claude/settings.json.
+Some features are only available in the CLI like MCP server configuration etc.
+The extension and CLI share the same conversation history.
+continue an extension conversation in the CLI, run claude --resume in the terminal.
+Reference terminal output in your prompts using @terminal:name where name is the terminal’s title
+Adding MCP in CLI: claude mcp add --transport http github https://api.githubcopilot.com/mcp/
+
+## Integrate Claude code with github actions: https://code.claude.com/docs/en/github-actions
+## Do Task from directly Slack: https://code.claude.com/docs/en/slack

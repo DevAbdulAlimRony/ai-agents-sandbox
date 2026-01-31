@@ -1,0 +1,188 @@
+### Codex:
+- Codex is OpenAI’s coding agent for software development. 
+- Included in GPT's  Plus, Pro, Business, Edu, and Enterprise plans.
+- Setup: Codex Extension or Using CLI: npm install -g @openai/codex.
+- or, in cloud: https://chatgpt.com/codex. Connect a github repository and use.
+
+- Promt Example: Explain how the transform module works and how other modules use it.
+- Threads: A thread is a single session, multiple promts following a promt.
+- Can run multiple threads at once, dont point same file to edit in multiple threads at atime.
+- Context: References to relevant files and images
+- Verfification promt: Summarize the request flow as a numbered list of steps. Then list the files involved.
+
+Workflow:
+- Using CLI: write command - codex.
+- I need to understand the protocol used by this service. Read @foo.ts @schema.ts and explain the schema and request/response flow. Focus on required vs optional fields and backward compatibility rules.
+- @ for file name, /mention to attach a specific file.
+
+- Bug Fixing Promt:
+Bug: Clicking "Save" on the settings screen sometimes shows "Saved" but doesn't persist the change.
+Repro:
+1) Start the app: npm run dev
+2) Go to /settings
+3) Toggle "Enable alerts"
+4) Click Save
+5) Refresh the page: the toggle resets
+
+Constraints:
+- Do not change the API shape.
+- Keep the fix minimal and add a regression test if feasible.
+
+Start by reproducing the bug locally, then propose a patch and run checks.
+Additional Promt: After the fix, run lint + the smallest relevant test suite. Report the commands and results.
+
+- Can open the file then write promt.
+
+- Test Writting:
+Write a unit test for this function. Follow conventions used in other tests.
+Add a test for the invert_list function in @transform.ts. Cover the happy path plus edge cases.
+
+- Prototype from a screenshot:
+Save your screenshot locally, then promt:
+Create a new dashboard based on this attched image.
+
+Constraints:
+- Follow language, design and visual patterns from other files in this project.
+- Match spacing, typography, and layout as closely as possible.
+
+Deliverables:
+- A new route/page that renders the UI
+- Any small components needed
+- README.md with instructions to run it locally.
+For best results, include any non-obvious behavior in text (hover states, validation rules, keyboard interactions).
+Verification: Start the dev server and tell me the local URL/route to view the prototype.
+
+- See Live update when designing:
+In cli- codex, in another window: npm run dev, promt: Propose 2-3 styling improvements for the landing page.
+
+- Refactoring:
+$plan
+
+We need to refactor the auth subsystem to:
+- split responsibilities (token parsing vs session loading vs permissions)
+- reduce circular imports
+- improve testability
+
+Constraints:
+- No user-visible behavior changes
+- Keep public APIs stable
+- Include a step-by-step migration plan
+
+Revise the plan to:
+- specify exactly which files move in each milestone
+- include a rollback strategy
+
+- Code Reviewing: codex, /review  Focus on edge cases and security issues
+- Review on Github Pull: @codex review, @codex review for security vulnerabilities and security concerns
+
+- Update Documentation:
+Identify the doc file(s) to change and open them (IDE) or @ mention them (IDE or CLI).
+Promt Exmp: Update the "advanced features" documentation to provide authentication troubleshooting guidance. Verify that all links are valid.
+
+- IDE Extension: can select model, switch mode- chat,agen, agent full access. write /local to get into the local environment, /cloud to get into the cloud environment.
+- /review, /status, /feedback
+
+Tips:
+Copy paste screenshot, can you fix alignment here?
+/review befor comit any changes.
+Can create a plan in document then give the plan to implement.
+:go ahead and do the following:
+1. investigate <feature A>
+2. think about how to implement <feature B>
+3. create a sectioned checklist to implement <feature B> where each section is a phase can
+
+- Alias for getting high reasoning, web serach enabled and all permissions enabled:
+alias c="codex -m gpt-5-codex -c model_resoning_effort='high' --search --yolo"
+- Do your important work on Codex CLI and get in the habit of offloading small bugs to Codex Cloud to parallelize your work.
+
+- For your git repository, we can add AGENTS.md so that all team members ai can be trained on the instructions base:
+- Codex reads AGENTS.md files before doing any work. By layering global guidance with project-specific overrides, you can start each task with consistent expectations, no matter which repository you open.
+- Use ~/.codex/AGENTS.override.md when you need a temporary global override without deleting the base file. Remove the override to restore the shared guidance.
+- Add overrides in nested directories when specific teams need different rules. For example, inside services/payments/ create AGENTS.override.md
+- Codex reports the global file first, the repository root AGENTS.md second, and the payments override last.
+- 
+# AGENTS.md
+
+## Code Style
+- Use Black for Python formatting.
+- Avoid abbreviations in variable names.
+
+## Testing
+- Run pytest tests/ before finalizing a PR.
+- All commits must pass lint checks via flake8.
+
+## PR Instructions
+- Title format: [Fix] Short description
+- Include a one-line summary and a "Testing Done" section
+
+- We can write configurations in .codex/config.toml if want to share same cofig across team with default options.
+- We can set rules in ./codex/rules/ to control which commands codex can run outside the sandbox.
+
+- MCP: Model Context protocol
+- It connects models to tools and context.
+- Configure in config.toml
+- Like connect with figma, notion
+- Useful MCP servers: 
+Context7: Connect to up-to-date developer documentation.
+Figma Local and Remote: Access your Figma designs.
+Playwright: Control and inspect a browser using Playwright.
+Chrome Developer Tools: Control and inspect Chrome.
+Sentry: Access Sentry logs.
+GitHub: Manage GitHub beyond what git supports (for example, pull requests and issues).
+
+- Skills:
+- Give Codex new capabilities and expertise.
+- A skill packages instructions, resources, and optional scripts so Codex can follow a workflow reliably.
+- You can share skills across teams or with the community. 
+- Can create: .codex/skills: SKILL.md, scripts/, references/, assets/
+- To select one, run the /skills slash command, or start typing $ to mention a skill. 
+- Can enable or disable skill in config file.
+
+Skill instructions for the Codex agent to follow when using this skill.
+- We can install or download skills from other repositories also.
+- Use skills when you want to share behavior across a team, enforce consistent workflows, or encode best practices once and reuse them everywhere.
+- Create a Skill: $skill-creator, promt: Create a skill that drafts a conventional commit message based on a short summary of changes.
+- or manually in .codex/skills/skill-name:
+---
+name: draft-commit-message
+description: Draft a conventional commit message when the user asks for help writing a commit message.
+metadata:
+  short-description: Draft an informative commit message.
+---
+
+Draft a conventional commit message that matches the change summary provided by the user.
+
+Requirements:
+
+- Use the Conventional Commits format: `type(scope): summary`
+- Use the imperative mood in the summary (for example, "Add", "Fix", "Refactor")
+- Keep the summary under 72 characters
+- If there are breaking changes, include a `BREAKING CHANGE:` footer
+
+- Codex SDK:
+If in our app, we are adding any coding automation.
+npm install @openai/codex-sdk
+import { Codex } from "@openai/codex-sdk";
+
+const codex = new Codex();
+const thread = codex.startThread();
+const result = await thread.run(
+  "Make a plan to diagnose and fix the CI failures"
+);
+
+- Codex CLI:
+codex login
+codex "explain this codebase"
+codex resume
+codex resume --all
+codex exec resume --last "Fix the race conditions you found"
+codex --model gpt-5-codex
+codex -i screenshot.png "Explain this error"
+codex --image img1.png,img2.jpg "Summarize these diagrams"
+--add-dir
+--ask-for-approval, -a
+etc.
+
+- Slash commands: /, /compact, /diff, /exit, /feedback, /init, /logout, /mcp, /mention, /model, /resume, /new, /quit, /review etc.
+
+* Can instruct to see git commit to everything related to git.

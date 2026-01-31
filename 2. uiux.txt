@@ -1,0 +1,7 @@
+# AI for Figma: Figma Make
+## Google's AI: stitch.withgoogle.com (Give promt, generate AI, Import to Figma)
+## app.loki.build: Can give image, document and promt to make ui.
+## banani: Give gemini pro, 5 different variation of same ui. Select anything and promt to edit.
+## Claude: Just command I need this prototype or diagram of my software requirement in figma.
+## Google AI Studio.
+## superdesign.dev: Use gemini3, close any web design using extension.
