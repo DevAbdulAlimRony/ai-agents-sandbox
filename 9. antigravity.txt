@@ -1,0 +1,93 @@
+## Install and can open agen from right top side.
+## From agent, we can also toggle to the editor.
+## Mode: Planning (Plan before execute), Fast (Executes directly, use for simple task.)
+## Settings will be found above.
+
+## Rules: Manually defined constraints for the Agent to follow, at both the local and global levels. 
+   - Global Rule, or Workspace Wise Rule.
+A Rule itself is simply a Markdown file, where you can input the constraints to guide the Agent to your tasks, stack, and style.
+Global Rules: ~/.gemini/GEMINI.md
+Workspace Rule:  .agent/rules.
+                We can set the rule as manual activation, always on, model decision, glob.
+                Mention by @
+## Workflows: Workflows enable you to define a series of steps to guide the Agent through a repetitive set of tasks, such as deploying a service or responding to PR comments.
+Call workflow: /workflow-name.
+You can also ask Agent to generate Workflows for you
+
+## Skills:  A skill is a folder containing a SKILL.md file with instructions that the agent can follow when working on specific tasks.
+Instructions for how to approach a specific type of task.
+Best practices and conventions to follow.
+Optional scripts and resources the agent can use.
+
+If skill relavant then agent automatically considerr it.
+Workspace specific skills: <workspace-root>/.agent/skills/<skill-folder>/
+Global Skills: ~/.gemini/antigravity/global_skills/<skill-folder>/
+Create a skill: .agen/skills/my-skil/SKILL.md. There can make more folders: scripts/, examples/, resources/
+Every skill needs a SKILL.md file with YAML frontmatter at the top.
+---
+name: my-skill
+description: Helps with a specific task. Use when you need to do X or Y.
+---
+
+# My Skill
+
+Detailed instructions for the agent go here.
+
+## When to use this skill
+
+- Use this when...
+- This is helpful for...
+
+## How to use it
+
+Step-by-step guidance, conventions, and patterns the agent should follow.
+
+# Each skill should do one thing well
+# The description is how the agent decides whether to use your skill.
+# If your skill includes scripts, encourage the agent to run them with --help first rather than reading the entire source code.
+# For complex skills, add a section that helps the agent choose the right approach based on the situation:
+---
+name: code-review
+description: Reviews code changes for bugs, style issues, and best practices. Use when reviewing PRs or checking code quality.
+---
+
+# Code Review Skill
+
+When reviewing code, follow these steps:
+
+## Review checklist
+
+1. **Correctness**: Does the code do what it's supposed to?
+2. **Edge cases**: Are error conditions handled?
+3. **Style**: Does it follow project conventions?
+4. **Performance**: Are there obvious inefficiencies?
+
+## How to provide feedback
+
+- Be specific about what needs to change
+- Explain why, not just what
+- Suggest alternatives when possible
+
+### In planning mode, if complex task, agent make task groups and work through tasks.
+### When the agent wants to interact with the browser, it invokes a browser subagent to handle the task at hand. 
+### In Secure Mode, the Agent's ability to interact with external websites is governed by the browser's Allowlist and Denylist
+### andboxing provides kernel-level isolation for terminal commands executed by the Agent.
+- When enabled, commands run in a restricted environment with limited file system and network access, protecting your system from unintended modifications.
+- Commands can only write to your designated workspace directory and essential system locations. This prevents the Agent from accidentally deleting or modifying files outside your project.
+# MCP(Model Context Protocol): Instead of manually pasting context (like database schemas or logs) into the editor, MCP allows Antigravity to fetch this information directly when needed.
+- Exmp: Search Notion or GitHub for authentication patterns.
+- Open the MCP Store, browse and install any MCP, authenticate and use.
+
+# Task List: A task list is an artifact that the agent uses to approach complex tasks and monitor progress on various action items.
+# Implementation Plan: Can make a plan first, then click implement.
+# Walkthrough: A concise summary of the changes that have been made to remind the user of what has happened in the active conversation.
+For broswer tasks, it sometimes contain screenshots and recordings.
+## Knowledge Items: A Knowledge Item is a collection of related information on a specific topic
+Antigravity automatically analyzes and extracts information from your conversation and uses that information to create new KIs or update existing KIs.
+To View: Open Agen Manager, and then below in sidebar.
+# Autocomplete: Ghost code appears at cursor. Can disable in settings.
+# Inline Command: ctrl + I, type your request.
+# Playground: Playgrounds are independent workspaces that allow you to start a conversation and explore ideas instantly.
+From agent, just turn on the playground.
+# Toggle Terminal: Ctrl + J
+# Chrome Extension: Antigravity Browser Extension is required for the Antigravity Agent to access the web.
